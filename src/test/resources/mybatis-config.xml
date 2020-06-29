@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+
+       Copyright ${license.git.copyrightYears} the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<!--
+  TODO
+    该文件配置需按照特定的顺序进行
+    (properties?,settings?,typeAliases?,typeHandlers?,objectFactory?,objectWrapperFactory?,reflectorFactory?,plugins?,environments?,databaseIdProvider?,mappers?)
+-->
+<configuration>
+  <properties resource="jdbc.properties"/>
+  <typeAliases>
+    <package name="cn.yangcx"/>
+  </typeAliases>
+  <!--类型处理器-->
+  <typeHandlers>
+    <package name="cn.yangcx.typehandler"/>
+    <!--<typeHandler handler="" javaType="" jdbcType=""/>-->
+  </typeHandlers>
+  <!--通过default决定启用哪一个environment-->
+  <environments default="development">
+    <environment id="development">
+      <!--type也是个别名，小写也可以；也支持配置类的全名-->
+      <transactionManager type="org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory"/>
+      <!--<transactionManager type="jdbc"/>-->
+      <!--<transactionManager type="JDBC"/>-->
+      <!--type也是个别名，POOLED:class org.apache.ibatis.datasource.pooled.PooledDataSourceFactory）-->
+      <dataSource type="POOLED">
+        <property name="driver" value="${database.driver}"/>
+        <property name="url" value="${database.url}"/>
+        <property name="username" value="${database.username}"/>
+        <property name="password" value="${database.password}"/>
+      </dataSource>
+    </environment>
+  </environments>
+  <!-- fixme 多数据库支持：具体的mapper.xml中也需要具体配置-->
+  <!--<databaseIdProvider type="DB_VENDOR">-->
+  <!--  <property name="MySQL" value="mysql"/>-->
+  <!--  <property name="Oracle" value="oracle"/>-->
+  <!--</databaseIdProvider>-->
+  <mappers>
+    <mapper resource="mapper/DemoMapper.xml"/>
+    <mapper class="cn.yangcx.mapper.DemoMapper"/>
+  </mappers>
+</configuration>
