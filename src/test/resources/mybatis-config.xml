@@ -57,7 +57,7 @@
   <!--  <property name="Oracle" value="oracle"/>-->
   <!--</databaseIdProvider>-->
   <mappers>
+    <!--不能重复配置-->
     <mapper resource="mapper/DemoMapper.xml"/>
-    <mapper class="cn.yangcx.mapper.DemoMapper"/>
   </mappers>
 </configuration>

@@ -125,6 +125,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       databaseIdProviderElement(root.evalNode("databaseIdProvider"));
       // 类型处理器 @MappedTypes @MappedJdbcTypes javaType 下相同 jdbcType 会被覆盖
       typeHandlerElement(root.evalNode("typeHandlers"));
+      // 根据配置生成完整的 MappedStatement 并保存到 Configuration
       mapperElement(root.evalNode("mappers"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing SQL Mapper Configuration. Cause: " + e, e);

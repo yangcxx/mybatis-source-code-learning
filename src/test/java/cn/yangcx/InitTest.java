@@ -39,6 +39,7 @@ public class InitTest {
     InputStream inputStream = Resources.getResourceAsStream(resource);
     SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
     SqlSession sqlSession = sqlSessionFactory.openSession();
+    // 通过动态代理执行真正的业务代码
     DemoMapper mapper = sqlSession.getMapper(DemoMapper.class);
     Map<String, Object> map = new HashMap<>(2);
     map.put("id", 1);

@@ -277,7 +277,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     }
 
     MappedStatement statement = statementBuilder.build();
-    // 缓存完整的 Statement 到 Configuration
+    // 缓存完整的 MappedStatement 到 Configuration
     configuration.addMappedStatement(statement);
     return statement;
   }
