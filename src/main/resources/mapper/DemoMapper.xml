@@ -23,6 +23,9 @@
     select *
     from person
     where id = #{id}
+    <if test="id != null">
+      AND id = #{id}
+    </if>
   </select>
 
   <select id="findWith$" parameterType="map" resultType="java.util.Map">
