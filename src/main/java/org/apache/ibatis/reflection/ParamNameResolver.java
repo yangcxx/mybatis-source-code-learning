@@ -15,21 +15,15 @@
  */
 package org.apache.ibatis.reflection;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.*;
 
 public class ParamNameResolver {
 
@@ -68,6 +62,7 @@ public class ParamNameResolver {
       }
       String name = null;
       for (Annotation annotation : paramAnnotations[paramIndex]) {
+        // 存在 @Param 注解，使用注解定义的参数名称
         if (annotation instanceof Param) {
           hasParamAnnotation = true;
           name = ((Param) annotation).value();
@@ -76,12 +71,15 @@ public class ParamNameResolver {
       }
       if (name == null) {
         // @Param was not specified.
+        // @Param 注解未配置
         if (useActualParamName) {
+          // 获取真实的参数名称 cxy 为什么是 arg0 这种啊？
           name = getActualParamName(method, paramIndex);
         }
         if (name == null) {
           // use the parameter index as the name ("0", "1", ...)
           // gcode issue #71
+          // 还获取不到的话，直接使用索引下标了
           name = String.valueOf(map.size());
         }
       }
@@ -122,9 +120,12 @@ public class ParamNameResolver {
   public Object getNamedParams(Object[] args) {
     final int paramCount = names.size();
     if (args == null || paramCount == 0) {
+      // 无参的情况
       return null;
     } else if (!hasParamAnnotation && paramCount == 1) {
+      // 只有一个参数且不带 @Param 注解的情况
       Object value = args[names.firstKey()];
+      // 只处理数组或集合
       return wrapToMapIfCollection(value, useActualParamName ? names.get(0) : null);
     } else {
       final Map<String, Object> param = new ParamMap<>();
@@ -154,6 +155,7 @@ public class ParamNameResolver {
    */
   public static Object wrapToMapIfCollection(Object object, String actualParamName) {
     if (object instanceof Collection) {
+      // 集合
       ParamMap<Object> map = new ParamMap<>();
       map.put("collection", object);
       if (object instanceof List) {
@@ -162,6 +164,7 @@ public class ParamNameResolver {
       Optional.ofNullable(actualParamName).ifPresent(name -> map.put(name, object));
       return map;
     } else if (object != null && object.getClass().isArray()) {
+      // 数组
       ParamMap<Object> map = new ParamMap<>();
       map.put("array", object);
       Optional.ofNullable(actualParamName).ifPresent(name -> map.put(name, object));

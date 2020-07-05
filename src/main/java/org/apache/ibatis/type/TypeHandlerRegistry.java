@@ -224,6 +224,7 @@ public final class TypeHandlerRegistry {
     if (jdbcHandlerMap != null) {
       handler = jdbcHandlerMap.get(jdbcType);
       if (handler == null) {
+        // cxy 为啥对应的 key 是 null
         handler = jdbcHandlerMap.get(null);
       }
       if (handler == null) {

@@ -43,7 +43,7 @@ public class InitTest {
     DemoMapper mapper = sqlSession.getMapper(DemoMapper.class);
     Map<String, Object> map = new HashMap<>(2);
     map.put("id", 1);
-    map.put("id1", 1);
+    map.put("name", "yang");
     System.out.println(mapper.selectAll(map));
     sqlSession.close();
   }

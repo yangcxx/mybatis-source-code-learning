@@ -1,17 +1,17 @@
 /**
- *    Copyright ${license.git.copyrightYears} the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright ${license.git.copyrightYears} the original author or authors.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.session;
 
@@ -101,7 +101,8 @@ public class Configuration {
   protected Class<? extends VFS> vfsImpl;
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
-  protected Set<String> lazyLoadTriggerMethods = new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString"));
+  protected Set<String> lazyLoadTriggerMethods = new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString"
+  ));
   protected Integer defaultStatementTimeout;
   protected Integer defaultFetchSize;
   protected ResultSetType defaultResultSetType;
@@ -133,9 +134,10 @@ public class Configuration {
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
   protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
 
-  protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection")
-      .conflictMessageProducer((savedValue, targetValue) ->
-          ". please check " + savedValue.getResource() + " and " + targetValue.getResource());
+  protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements " +
+    "collection")
+    .conflictMessageProducer((savedValue, targetValue) ->
+      ". please check " + savedValue.getResource() + " and " + targetValue.getResource());
   protected final Map<String, Cache> caches = new StrictMap<>("Caches collection");
   protected final Map<String, ResultMap> resultMaps = new StrictMap<>("Result Maps collection");
   protected final Map<String, ParameterMap> parameterMaps = new StrictMap<>("Parameter Maps collection");
@@ -602,21 +604,30 @@ public class Configuration {
     return MetaObject.forObject(object, objectFactory, objectWrapperFactory, reflectorFactory);
   }
 
-  public ParameterHandler newParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
-    ParameterHandler parameterHandler = mappedStatement.getLang().createParameterHandler(mappedStatement, parameterObject, boundSql);
+  public ParameterHandler newParameterHandler(MappedStatement mappedStatement, Object parameterObject,
+                                              BoundSql boundSql) {
+    ParameterHandler parameterHandler = mappedStatement.getLang().createParameterHandler(mappedStatement,
+      parameterObject, boundSql);
     parameterHandler = (ParameterHandler) interceptorChain.pluginAll(parameterHandler);
     return parameterHandler;
   }
 
-  public ResultSetHandler newResultSetHandler(Executor executor, MappedStatement mappedStatement, RowBounds rowBounds, ParameterHandler parameterHandler,
-      ResultHandler resultHandler, BoundSql boundSql) {
-    ResultSetHandler resultSetHandler = new DefaultResultSetHandler(executor, mappedStatement, parameterHandler, resultHandler, boundSql, rowBounds);
+  public ResultSetHandler newResultSetHandler(Executor executor, MappedStatement mappedStatement, RowBounds rowBounds
+    , ParameterHandler parameterHandler,
+                                              ResultHandler resultHandler, BoundSql boundSql) {
+    ResultSetHandler resultSetHandler = new DefaultResultSetHandler(executor, mappedStatement, parameterHandler,
+      resultHandler, boundSql, rowBounds);
     resultSetHandler = (ResultSetHandler) interceptorChain.pluginAll(resultSetHandler);
     return resultSetHandler;
   }
 
-  public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
-    StatementHandler statementHandler = new RoutingStatementHandler(executor, mappedStatement, parameterObject, rowBounds, resultHandler, boundSql);
+  public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement,
+                                              Object parameterObject, RowBounds rowBounds,
+                                              ResultHandler resultHandler, BoundSql boundSql) {
+    // 决定SimpleStatementHandler、PreparedStatementHandler、CallableStatementHandler（存储过程）
+    StatementHandler statementHandler = new RoutingStatementHandler(executor, mappedStatement, parameterObject,
+      rowBounds, resultHandler, boundSql);
+    // cxy 插件？？
     statementHandler = (StatementHandler) interceptorChain.pluginAll(statementHandler);
     return statementHandler;
   }
@@ -777,6 +788,7 @@ public class Configuration {
   }
 
   public MappedStatement getMappedStatement(String id, boolean validateIncompleteStatements) {
+    // 再次尝试解析缓存中所有未处理的语句节点
     if (validateIncompleteStatements) {
       buildAllStatements();
     }
@@ -826,10 +838,11 @@ public class Configuration {
     cacheRefMap.put(namespace, referencedNamespace);
   }
 
-  /*
+  /**
    * Parses all the unprocessed statement nodes in the cache. It is recommended
    * to call this method once all the mappers are added as it provides fail-fast
    * statement validation.
+   * 解析缓存中所有未处理的语句节点。建议添加所有映射器后调用此方法，因为它提供了快速失败的语句验证。
    */
   protected void buildAllStatements() {
     parsePendingResultMaps();
@@ -903,7 +916,8 @@ public class Configuration {
         if (value instanceof ResultMap) {
           ResultMap entryResultMap = (ResultMap) value;
           if (!entryResultMap.hasNestedResultMaps() && entryResultMap.getDiscriminator() != null) {
-            Collection<String> discriminatedResultMapNames = entryResultMap.getDiscriminator().getDiscriminatorMap().values();
+            Collection<String> discriminatedResultMapNames =
+              entryResultMap.getDiscriminator().getDiscriminatorMap().values();
             if (discriminatedResultMapNames.contains(rm.getId())) {
               entryResultMap.forceNestedResultMaps();
             }
@@ -973,7 +987,7 @@ public class Configuration {
     public V put(String key, V value) {
       if (containsKey(key)) {
         throw new IllegalArgumentException(name + " already contains value for " + key
-            + (conflictMessageProducer == null ? "" : conflictMessageProducer.apply(super.get(key), value)));
+          + (conflictMessageProducer == null ? "" : conflictMessageProducer.apply(super.get(key), value)));
       }
       if (key.contains(".")) {
         final String shortKey = getShortName(key);
@@ -994,7 +1008,7 @@ public class Configuration {
       }
       if (value instanceof Ambiguity) {
         throw new IllegalArgumentException(((Ambiguity) value).getSubject() + " is ambiguous in " + name
-            + " (try using the full name including the namespace, or rename one of the entries)");
+          + " (try using the full name including the namespace, or rename one of the entries)");
       }
       return value;
     }

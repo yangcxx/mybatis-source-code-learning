@@ -15,17 +15,13 @@
  */
 package org.apache.ibatis.type;
 
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.Configuration;
+
+import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
-
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.Configuration;
 
 /**
  * @author Clinton Begin
@@ -63,7 +59,9 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType)
       throws SQLException {
+    // 根据 parameterMapping 只能获取到默认的 UnknownTypeHandler，只能重新获取对应的类型处理器
     TypeHandler handler = resolveTypeHandler(parameter, jdbcType);
+    // 根据类型处理器进行设值
     handler.setParameter(ps, i, parameter, jdbcType);
   }
 

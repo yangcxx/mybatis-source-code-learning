@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.binding;
 
+import org.apache.ibatis.reflection.ExceptionUtil;
+import org.apache.ibatis.session.SqlSession;
+
 import java.io.Serializable;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -25,9 +28,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
-
-import org.apache.ibatis.reflection.ExceptionUtil;
-import org.apache.ibatis.session.SqlSession;
 
 /**
  * @author Clinton Begin
@@ -80,8 +80,10 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     try {
       if (Object.class.equals(method.getDeclaringClass())) {
+        // 调用的 Object 的默认方法
         return method.invoke(this, args);
       } else {
+        // cachedInvoker：JDK8 及 JDK9+ 对于 default 方法处理方式不一样 cxy JDK LookUp 机制？？？
         return cachedInvoker(method).invoke(proxy, method, args, sqlSession);
       }
     } catch (Throwable t) {
@@ -100,11 +102,14 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
       }
 
       return methodCache.computeIfAbsent(method, m -> {
+        // default 方法
         if (m.isDefault()) {
           try {
             if (privateLookupInMethod == null) {
+              // JDK8
               return new DefaultMethodInvoker(getMethodHandleJava8(method));
             } else {
+              // JDK9+
               return new DefaultMethodInvoker(getMethodHandleJava9(method));
             }
           } catch (IllegalAccessException | InstantiationException | InvocationTargetException
