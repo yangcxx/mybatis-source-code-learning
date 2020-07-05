@@ -78,7 +78,7 @@ public class DefaultParameterHandler implements ParameterHandler {
             MetaObject metaObject = configuration.newMetaObject(parameterObject);
             value = metaObject.getValue(propertyName);
           }
-          // cxy 这里为啥全都是 UnknownTypeHandler ??? 需要再理一下 parameterMapping 构建过程
+          // 获取从SQL解析的参数处理器（默认是 java.lang.Object）
           TypeHandler typeHandler = parameterMapping.getTypeHandler();
           JdbcType jdbcType = parameterMapping.getJdbcType();
           if (value == null && jdbcType == null) {

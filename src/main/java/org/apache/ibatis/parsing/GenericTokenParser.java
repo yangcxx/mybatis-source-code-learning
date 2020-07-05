@@ -80,7 +80,7 @@ public class GenericTokenParser {
           builder.append(src, start, src.length - start);
           offset = src.length;
         } else {
-          // 占位符处理：#{} 被替换为 ?，同时处理占位符类的表达式
+          // 占位符处理：#{} 被替换为 ?，同时处理占位符类的表达式（通过SQL参数得到对应的参数处理器）
           builder.append(handler.handleToken(expression.toString()));
           offset = end + closeToken.length();
         }

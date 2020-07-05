@@ -23,8 +23,8 @@
     select *
     from person
     where id = #{id}
-    <if test="id != null">
-      AND id = #{id}
+    <if test="name != null and name != ''">
+      AND UPPER(name) LIKE CONCAT('%',UPPER(TRIM(#{name})),'%')
     </if>
   </select>
 

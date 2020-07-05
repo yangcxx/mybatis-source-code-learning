@@ -47,7 +47,7 @@ public class SqlSourceBuilder extends BaseBuilder {
     if (configuration.isShrinkWhitespacesInSql()) {
       sql = parser.parse(removeExtraWhitespaces(originalSql));
     } else {
-      // 占位符替换为 ?
+      // 占位符替换为 ?，获取对应的参数解析器（直接通过SQL解析）
       sql = parser.parse(originalSql);
     }
     return new StaticSqlSource(configuration, sql, handler.getParameterMappings());
@@ -100,6 +100,7 @@ public class SqlSourceBuilder extends BaseBuilder {
       } else if (JdbcType.CURSOR.name().equals(propertiesMap.get("jdbcType"))) {
         propertyType = java.sql.ResultSet.class;
       } else if (property == null || Map.class.isAssignableFrom(parameterType)) {
+        // 参数类型是 Map，全部处理为 Object
         propertyType = Object.class;
       } else {
         MetaClass metaClass = MetaClass.forClass(parameterType, configuration.getReflectorFactory());
@@ -141,6 +142,7 @@ public class SqlSourceBuilder extends BaseBuilder {
       if (typeHandlerAlias != null) {
         builder.typeHandler(resolveTypeHandler(javaType, typeHandlerAlias));
       }
+      // Mapper.xml 中的参数没有标注类型的话默认使用 java.lang.Object 作为 typeHandler
       return builder.build();
     }
 
