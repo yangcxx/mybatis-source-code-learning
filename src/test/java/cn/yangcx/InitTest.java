@@ -45,6 +45,8 @@ public class InitTest {
     map.put("id", 1);
     map.put("name", "yang");
     System.out.println(mapper.selectAll(map));
+    //Person person = mapper.findById(1L);
+    //System.out.println(person);
     sqlSession.close();
   }
 

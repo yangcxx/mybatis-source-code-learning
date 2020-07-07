@@ -15,6 +15,8 @@
  */
 package cn.yangcx.mapper;
 
+import cn.yangcx.entity.Person;
+
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +34,13 @@ public interface DemoMapper {
    * @return
    */
   List<Map<String, Object>> selectAll(Map<String, Object> map);
+
+  /**
+   * id精确查找
+   * @param id id
+   * @return person
+   */
+  Person findById(Long id);
 
   /**
    * ${} 占位符

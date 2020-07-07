@@ -1,4 +1,4 @@
-package cn.yangcx;
+package cn.yangcx.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +27,12 @@ public class Person {
   private String address;
 
   private Long card;
+
+  public Person(Long id, String name, Integer sex) {
+    this.id = id;
+    this.name = name;
+    this.sex = sex;
+  }
 
   public Person(@Param(value = "id") Long id, @Param(value = "name") String name) {
     this.id = id;

@@ -34,6 +34,12 @@
     where name = ${name}
   </select>
 
+  <select id="findById" resultType="cn.yangcx.entity.Person">
+    select *
+    from person
+    where id = #{id}
+  </select>
+
   <resultMap id="person" type="Person">
     <constructor>
       <idArg name="id" javaType="java.lang.Long" column="id" jdbcType="BIGINT"/>

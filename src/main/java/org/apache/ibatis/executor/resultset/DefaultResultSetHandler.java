@@ -15,19 +15,6 @@
  */
 package org.apache.ibatis.executor.resultset;
 
-import java.lang.reflect.Constructor;
-import java.sql.CallableStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.ibatis.annotations.AutomapConstructor;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.cache.CacheKey;
@@ -42,25 +29,22 @@ import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.result.DefaultResultContext;
 import org.apache.ibatis.executor.result.DefaultResultHandler;
 import org.apache.ibatis.executor.result.ResultMapException;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.Discriminator;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ParameterMapping;
-import org.apache.ibatis.mapping.ParameterMode;
-import org.apache.ibatis.mapping.ResultMap;
-import org.apache.ibatis.mapping.ResultMapping;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.ReflectorFactory;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
-import org.apache.ibatis.session.AutoMappingBehavior;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.ResultContext;
-import org.apache.ibatis.session.ResultHandler;
-import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.*;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+
+import java.lang.reflect.Constructor;
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.*;
 
 /**
  * @author Clinton Begin
@@ -186,11 +170,13 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     int resultSetCount = 0;
     ResultSetWrapper rsw = getFirstResultSet(stmt);
 
+    // Mapper.xml 配置的预期结果集
     List<ResultMap> resultMaps = mappedStatement.getResultMaps();
     int resultMapCount = resultMaps.size();
     validateResultMapsCount(rsw, resultMapCount);
     while (rsw != null && resultMapCount > resultSetCount) {
       ResultMap resultMap = resultMaps.get(resultSetCount);
+      // 从 ResultSet 中获取结果并存储到 ResultHandler 中
       handleResultSet(rsw, resultMap, multipleResults, null);
       rsw = getNextResultSet(stmt);
       cleanUpAfterHandlingResultSet();
@@ -212,6 +198,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       }
     }
 
+    // 如果只有一条结果，取出来；否则保留原来的查询结果
     return collapseSingleResultList(multipleResults);
   }
 
@@ -234,6 +221,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   }
 
   private ResultSetWrapper getFirstResultSet(Statement stmt) throws SQLException {
+    // 获取执行结果结果集
     ResultSet rs = stmt.getResultSet();
     while (rs == null) {
       // move forward to get the first resultset in case the driver
@@ -349,9 +337,12 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     DefaultResultContext<Object> resultContext = new DefaultResultContext<>();
     ResultSet resultSet = rsw.getResultSet();
     skipRows(resultSet, rowBounds);
+    // 分页判断
     while (shouldProcessMoreRows(resultContext, rowBounds) && !resultSet.isClosed() && resultSet.next()) {
       ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(resultSet, resultMap, null);
+      // 行结果（根据 Mapper.xml 的 resultType 封装过的）
       Object rowValue = getRowValue(rsw, discriminatedResultMap, null);
+      // 查询结果存储到 ResultHandler
       storeObject(resultHandler, resultContext, rowValue, parentMapping, resultSet);
     }
   }
@@ -360,6 +351,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     if (parentMapping != null) {
       linkToParents(rs, parentMapping, rowValue);
     } else {
+      // 结果处理
       callResultHandler(resultHandler, resultContext, rowValue);
     }
   }
@@ -394,7 +386,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap, String columnPrefix) throws SQLException {
     final ResultLoaderMap lazyLoader = new ResultLoaderMap();
+    // 反射构造 ResultMap 的空对象
     Object rowValue = createResultObject(rsw, resultMap, lazyLoader, columnPrefix);
+    // 只有基础数据类型及对应包装类型存在对应的 Handler（还有其他框架预置的一些 Bean），自定义的 JavaBean 不存在预置的 Handler
     if (rowValue != null && !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {
       final MetaObject metaObject = configuration.newMetaObject(rowValue);
       boolean foundValues = this.useConstructorMappings;
@@ -627,6 +621,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     this.useConstructorMappings = false; // reset previous mapping result
     final List<Class<?>> constructorArgTypes = new ArrayList<>();
     final List<Object> constructorArgs = new ArrayList<>();
+    // 根据 ResultMap 配置使用反射构造对象
     Object resultObject = createResultObject(rsw, resultMap, constructorArgTypes, constructorArgs, columnPrefix);
     if (resultObject != null && !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {
       final List<ResultMapping> propertyMappings = resultMap.getPropertyResultMappings();
@@ -638,7 +633,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         }
       }
     }
-    this.useConstructorMappings = resultObject != null && !constructorArgTypes.isEmpty(); // set current mapping result
+    // set current mapping result
+    this.useConstructorMappings = resultObject != null && !constructorArgTypes.isEmpty();
     return resultObject;
   }
 
@@ -646,14 +642,17 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       throws SQLException {
     final Class<?> resultType = resultMap.getType();
     final MetaClass metaType = MetaClass.forClass(resultType, reflectorFactory);
+    // 优先使用 Mapper.xml 的 ResultMap 节点的 Constructor 配置
     final List<ResultMapping> constructorMappings = resultMap.getConstructorResultMappings();
     if (hasTypeHandlerForResultObject(rsw, resultType)) {
       return createPrimitiveResultObject(rsw, resultMap, columnPrefix);
     } else if (!constructorMappings.isEmpty()) {
       return createParameterizedResultObject(rsw, resultType, constructorMappings, constructorArgTypes, constructorArgs, columnPrefix);
     } else if (resultType.isInterface() || metaType.hasDefaultConstructor()) {
+      // 结果类型为接口（主要处理的 Java 预置的集合或Map等）或则存在无参构造
       return objectFactory.create(resultType);
     } else if (shouldApplyAutomaticMappings(resultMap, false)) {
+      // 使用存在 @AutomapConstructor 注解的构造
       return createByConstructorSignature(rsw, resultType, constructorArgTypes, constructorArgs);
     }
     throw new ExecutorException("Do not know how to create an instance of " + resultType);
@@ -688,11 +687,13 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private Object createByConstructorSignature(ResultSetWrapper rsw, Class<?> resultType, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) throws SQLException {
     final Constructor<?>[] constructors = resultType.getDeclaredConstructors();
+    // 默认构造：仅有的一个构造或使用了 @AutomapConstructor 注解的构造
     final Constructor<?> defaultConstructor = findDefaultConstructor(constructors);
     if (defaultConstructor != null) {
       return createUsingConstructor(rsw, resultType, constructorArgTypes, constructorArgs, defaultConstructor);
     } else {
       for (Constructor<?> constructor : constructors) {
+        // 根据 ResultSet 返回结果的行数据类型与构造函数接受数据类型进行匹配
         if (allowedConstructorUsingTypeHandlers(constructor, rsw.getJdbcTypes())) {
           return createUsingConstructor(rsw, resultType, constructorArgTypes, constructorArgs, constructor);
         }
@@ -721,6 +722,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     }
 
     for (final Constructor<?> constructor : constructors) {
+      // 使用了 @AutomapConstructor 的第一个构造函数会被当作默认构造
       if (constructor.isAnnotationPresent(AutomapConstructor.class)) {
         return constructor;
       }
@@ -734,6 +736,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       return false;
     }
     for (int i = 0; i < parameterTypes.length; i++) {
+      // 所有的数据类型必须都存在类型处理器
       if (!typeHandlerRegistry.hasTypeHandler(parameterTypes[i], jdbcTypes.get(i))) {
         return false;
       }
