@@ -31,7 +31,11 @@ public class GenericTokenParser {
   }
 
   /**
-   * 占位符替换（是否为动态SQL；只处理参数 openToken）
+   * 占位符处理
+   * 1、SQL预处理时，确认是否为动态SQL
+   * 2、#{} 预处理为 ?
+   * 3、${} 执行时被替换为具体的 value
+   *
    * @param text 参数SQL（占位符）
    * @return 替换后的SQL
    */
@@ -81,6 +85,7 @@ public class GenericTokenParser {
           offset = src.length;
         } else {
           // 占位符处理：#{} 被替换为 ?，同时处理占位符类的表达式（通过SQL参数得到对应的参数处理器）
+          // ${} 替换为 value 时不会做任何的参数转换处理（传什么就是什么）
           builder.append(handler.handleToken(expression.toString()));
           offset = end + closeToken.length();
         }

@@ -28,7 +28,7 @@
     </if>
   </select>
 
-  <select id="findWith$" parameterType="map" resultType="java.util.Map">
+  <select id="findWith$" parameterType="string" resultType="java.util.Map">
     select *
     from person
     where name = ${name}
