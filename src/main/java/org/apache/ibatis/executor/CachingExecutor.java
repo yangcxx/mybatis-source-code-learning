@@ -90,13 +90,17 @@ public class CachingExecutor implements Executor {
   @Override
   public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql)
       throws SQLException {
+    // MappedStatement 全局共享，但是缓存是独立配置的
+    // 二级缓存的 Cache（mapper.xml中配置了 <cache> 节点即表示开启）
     Cache cache = ms.getCache();
     if (cache != null) {
       // 默认：select 使用缓存，其他的不使用缓存
       flushCacheIfRequired(ms);
+      // 当前 SQL 是否开启缓存
       if (ms.isUseCache() && resultHandler == null) {
         ensureNoOutParams(ms, boundSql);
         @SuppressWarnings("unchecked")
+        // 通过事务管理器进行获取
         List<E> list = (List<E>) tcm.getObject(cache, key);
         if (list == null) {
           list = delegate.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
@@ -162,6 +166,7 @@ public class CachingExecutor implements Executor {
 
   private void flushCacheIfRequired(MappedStatement ms) {
     Cache cache = ms.getCache();
+    // 是否刷新缓存，通过 flushCache 配置
     if (cache != null && ms.isFlushCacheRequired()) {
       tcm.clear(cache);
     }

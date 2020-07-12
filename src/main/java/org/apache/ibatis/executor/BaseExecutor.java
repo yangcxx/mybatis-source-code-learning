@@ -145,8 +145,10 @@ public abstract class BaseExecutor implements Executor {
     List<E> list;
     try {
       queryStack++;
+      // 这里是一级缓存
       list = resultHandler == null ? (List<E>) localCache.getObject(key) : null;
       if (list != null) {
+        // cxy 对存储过程有有输出资源的处理
         handleLocallyCachedOutputParameters(ms, key, parameter, boundSql);
       } else {
         list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql);

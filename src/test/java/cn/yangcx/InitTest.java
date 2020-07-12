@@ -15,6 +15,7 @@
  */
 package cn.yangcx;
 
+import cn.yangcx.entity.Person;
 import cn.yangcx.mapper.DemoMapper;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -23,8 +24,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * TODO<br/>
@@ -41,12 +40,14 @@ public class InitTest {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     // 通过动态代理执行真正的业务代码
     DemoMapper mapper = sqlSession.getMapper(DemoMapper.class);
-    Map<String, Object> map = new HashMap<>(2);
-    map.put("id", 1);
-    map.put("name", "yang");
-    System.out.println(mapper.selectAll(map));
-    //Person person = mapper.findById(1L);
-    //System.out.println(person);
+    //Map<String, Object> map = new HashMap<>(2);
+    //map.put("id", 1);
+    //map.put("name", "yang");
+    //System.out.println(mapper.selectAll(map));
+    Person person = mapper.findById(1L);
+    System.out.println(person);
+    //Map<String, Object> yangcx = mapper.findWith$("yangcx");
+    //System.out.println(yangcx);
     sqlSession.close();
   }
 

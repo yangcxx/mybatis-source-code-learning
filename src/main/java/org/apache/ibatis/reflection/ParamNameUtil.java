@@ -34,6 +34,7 @@ public class ParamNameUtil {
 
   private static List<String> getParameterNames(Executable executable) {
     // cxy 拿不到真实的参数名称？？？
+    // 直接调用 JDK 的 API，拿不到真实的参数名称属于 JDK 的bug
     return Arrays.stream(executable.getParameters()).map(Parameter::getName).collect(Collectors.toList());
   }
 
