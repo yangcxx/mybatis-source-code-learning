@@ -118,6 +118,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       // TODO 跟插件开发相关 MateObject 方便反射类操作实体类对象
       objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
       reflectorFactoryElement(root.evalNode("reflectorFactory"));
+      // settings 配置项预置
       settingsElement(settings);
       // read it after objectFactory and objectWrapperFactory issue #631
       environmentsElement(root.evalNode("environments"));
@@ -258,6 +259,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       "PARTIAL")));
     configuration.setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior.valueOf(props.getProperty(
       "autoMappingUnknownColumnBehavior", "NONE")));
+    // 默认开启缓存
     configuration.setCacheEnabled(booleanValueOf(props.getProperty("cacheEnabled"), true));
     configuration.setProxyFactory((ProxyFactory) createInstance(props.getProperty("proxyFactory")));
     configuration.setLazyLoadingEnabled(booleanValueOf(props.getProperty("lazyLoadingEnabled"), false));

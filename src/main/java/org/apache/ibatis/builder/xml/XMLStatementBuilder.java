@@ -76,7 +76,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     String parameterType = context.getStringAttribute("parameterType");
     Class<?> parameterTypeClass = resolveClass(parameterType);
 
-    // 解析配置的自定义脚本语言驱动，例如解析占位符 # $ TODO 使用的很少 mybatis-plus 重写了此项
+    // 解析配置的自定义脚本语言驱动，例如解析占位符 #{} ${} TODO 使用的很少 mybatis-plus 重写了此项
     String lang = context.getStringAttribute("lang");
     LanguageDriver langDriver = getLanguageDriver(lang);
 
@@ -117,6 +117,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     String keyColumn = context.getStringAttribute("keyColumn");
     String resultSets = context.getStringAttribute("resultSets");
 
+    // 每一个 insert|update|delete|select 构建一个 mappedStatement 并本地缓存
     builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
         fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,
         resultSetTypeEnum, flushCache, useCache, resultOrdered,

@@ -22,6 +22,8 @@ public class Person {
 
   private String name;
 
+  private Integer age;
+
   private Integer sex;
 
   private String address;

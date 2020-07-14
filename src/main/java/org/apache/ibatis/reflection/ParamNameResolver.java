@@ -73,7 +73,7 @@ public class ParamNameResolver {
         // @Param was not specified.
         // @Param 注解未配置
         if (useActualParamName) {
-          // 获取真实的参数名称 cxy 为什么是 arg0 这种啊？
+          // 获取真实的参数名称 cxy 为什么是 arg0 这种啊？【可能是JDK11的bug】
           name = getActualParamName(method, paramIndex);
         }
         if (name == null) {
@@ -133,6 +133,7 @@ public class ParamNameResolver {
       for (Map.Entry<Integer, String> entry : names.entrySet()) {
         param.put(entry.getValue(), args[entry.getKey()]);
         // add generic param names (param1, param2, ...)
+        // 参数都会被转换成 param1 param2 这种格式
         final String genericParamName = GENERIC_NAME_PREFIX + (i + 1);
         // ensure not to overwrite parameter named with @Param
         if (!names.containsValue(genericParamName)) {

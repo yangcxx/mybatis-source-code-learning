@@ -647,9 +647,11 @@ public class Configuration {
     } else {
       executor = new SimpleExecutor(this, transaction);
     }
+    // 默认开启缓存
     if (cacheEnabled) {
       executor = new CachingExecutor(executor);
     }
+    // cxy 插件
     executor = (Executor) interceptorChain.pluginAll(executor);
     return executor;
   }

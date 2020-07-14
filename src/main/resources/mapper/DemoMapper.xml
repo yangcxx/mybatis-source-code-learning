@@ -19,7 +19,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.yangcx.mapper.DemoMapper">
 
-  <select id="selectAll" parameterType="map" resultType="map">
+  <!-- 开启二级缓存；各个 insert|update|delete|select 可以进一步配置 -->
+  <!--<cache/>-->
+
+  <insert id="add">
+    insert into person(name, sex, age, address, card)
+    VALUES (#{person.name}, #{person.sex}, #{person.age},#{person.address},#{person.card})
+  </insert>
+
+  <select useCache="false" id="selectAll" parameterType="map" resultType="map">
     select *
     from person
     where id = #{id}

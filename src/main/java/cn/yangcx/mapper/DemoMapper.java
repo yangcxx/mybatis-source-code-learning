@@ -16,6 +16,7 @@
 package cn.yangcx.mapper;
 
 import cn.yangcx.entity.Person;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,12 @@ import java.util.Map;
  * @author YANGCX
  */
 public interface DemoMapper {
+
+  /**
+   * 新增 fixme JDK11 的 bug，此处必须添加 @Param 注解
+   * @param p 用户
+   */
+  void add(@Param("person") Person p);
 
   /**
    * #{} 占位符
