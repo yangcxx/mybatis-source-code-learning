@@ -109,6 +109,7 @@ public abstract class BaseExecutor implements Executor {
     if (closed) {
       throw new ExecutorException("Executor was closed.");
     }
+    // 任意 update 操作（update|insert|delete）都会清空一级缓存
     clearLocalCache();
     return doUpdate(ms, parameter);
   }
