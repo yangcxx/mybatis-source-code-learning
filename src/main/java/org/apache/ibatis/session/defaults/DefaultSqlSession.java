@@ -144,8 +144,7 @@ public class DefaultSqlSession implements SqlSession {
   public <E> List<E> selectList(String statement, Object parameter, RowBounds rowBounds) {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);
-      // 根据缓存是否开启决定调用 BaseExecutor 或者 CachingExecutor
-      // 这里的缓存就是二级缓存
+      // 缓存命中优先级：二级缓存 > 一级缓存 > 数据库查询
       return executor.query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);

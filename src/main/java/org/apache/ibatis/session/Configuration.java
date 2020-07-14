@@ -640,6 +640,7 @@ public class Configuration {
     executorType = executorType == null ? defaultExecutorType : executorType;
     executorType = executorType == null ? ExecutorType.SIMPLE : executorType;
     Executor executor;
+    // 确认需要使用的执行器（查询都会使用一级缓存）
     if (ExecutorType.BATCH == executorType) {
       executor = new BatchExecutor(this, transaction);
     } else if (ExecutorType.REUSE == executorType) {

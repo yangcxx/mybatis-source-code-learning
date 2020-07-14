@@ -109,6 +109,7 @@ public class CachingExecutor implements Executor {
         return list;
       }
     }
+    // 优先级：二级缓存 > 一级缓存 > 数据库查询
     return delegate.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
   }
 

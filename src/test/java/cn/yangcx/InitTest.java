@@ -37,6 +37,7 @@ public class InitTest {
     String resource = "mybatis-config.xml";
     InputStream inputStream = Resources.getResourceAsStream(resource);
     SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+    // 默认情况下启用缓存
     SqlSession sqlSession = sqlSessionFactory.openSession();
     // 通过动态代理执行真正的业务代码
     DemoMapper mapper = sqlSession.getMapper(DemoMapper.class);
