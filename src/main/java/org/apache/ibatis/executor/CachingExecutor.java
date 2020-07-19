@@ -91,6 +91,7 @@ public class CachingExecutor implements Executor {
   public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql)
       throws SQLException {
     // 二级缓存的 Cache（mapper.xml中配置了 <cache/> 节点即表示开启）
+    // 装饰着模式：SynchronizedCache<LoggingCache<SerializedCache<LruCache<PerpetualCache>>>>
     Cache cache = ms.getCache();
     if (cache != null) {
       // 默认：select 使用缓存，其他的不使用缓存
