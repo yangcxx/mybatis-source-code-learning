@@ -118,6 +118,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .readWrite(readWrite)
         .blocking(blocking)
         .properties(props)
+        // 根据 cache 属性进行包装（存在必须的标的包装）
         .build();
     configuration.addCache(cache);
     currentCache = cache;

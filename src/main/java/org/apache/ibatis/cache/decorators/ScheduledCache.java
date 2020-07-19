@@ -15,9 +15,9 @@
  */
 package org.apache.ibatis.cache.decorators;
 
-import java.util.concurrent.TimeUnit;
-
 import org.apache.ibatis.cache.Cache;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Clinton Begin
@@ -51,6 +51,7 @@ public class ScheduledCache implements Cache {
 
   @Override
   public void putObject(Object key, Object object) {
+    // 判断是否需要清除原来的缓存数据
     clearWhenStale();
     delegate.putObject(key, object);
   }
@@ -83,6 +84,7 @@ public class ScheduledCache implements Cache {
   }
 
   private boolean clearWhenStale() {
+    // 是执行 insert|update|delete 时先判断再确认是否需要清除（没有使用定时任务进行缓存清除）
     if (System.currentTimeMillis() - lastClear > clearInterval) {
       clear();
       return true;
