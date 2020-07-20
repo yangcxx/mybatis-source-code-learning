@@ -6,6 +6,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.apache.ibatis.annotations.Param;
 
+import java.io.Serializable;
+
 /**
  * TODO<br/>
  * Date: 2020/6/27 11:57 <br/>
@@ -16,8 +18,9 @@ import org.apache.ibatis.annotations.Param;
 @Setter
 @ToString
 @NoArgsConstructor
-public class Person {
+public class Person implements Serializable {
 
+  private static final long serialVersionUID = -904540000351777676L;
   private Long id;
 
   private String name;

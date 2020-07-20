@@ -51,6 +51,7 @@ public class CachingExecutor implements Executor {
   public void close(boolean forceRollback) {
     try {
       // issues #499, #524 and #573
+      // 事务提交或回滚
       if (forceRollback) {
         tcm.rollback();
       } else {
@@ -103,13 +104,16 @@ public class CachingExecutor implements Executor {
         // 通过事务管理器进行获取
         List<E> list = (List<E>) tcm.getObject(cache, key);
         if (list == null) {
+          // 一级缓存 -> 数据库查询
           list = delegate.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
           // issue #578 and #116
+          // 二级缓存维护：暂时放到本地待提交缓存
           tcm.putObject(cache, key, list);
         }
         return list;
       }
     }
+    // 一级缓存不涉及事务处理
     // 优先级：二级缓存 > 一级缓存 > 数据库查询
     return delegate.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
   }
