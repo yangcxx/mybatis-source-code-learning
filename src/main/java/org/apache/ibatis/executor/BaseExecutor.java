@@ -196,6 +196,7 @@ public abstract class BaseExecutor implements Executor {
       throw new ExecutorException("Executor was closed.");
     }
     CacheKey cacheKey = new CacheKey();
+    // hashCode 计算
     // namespace.sqlId
     cacheKey.update(ms.getId());
     // offset

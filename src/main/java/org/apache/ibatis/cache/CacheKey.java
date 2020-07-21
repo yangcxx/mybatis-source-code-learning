@@ -15,12 +15,12 @@
  */
 package org.apache.ibatis.cache;
 
+import org.apache.ibatis.reflection.ArrayUtil;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
-
-import org.apache.ibatis.reflection.ArrayUtil;
 
 /**
  * @author Clinton Begin
@@ -72,6 +72,7 @@ public class CacheKey implements Cloneable, Serializable {
   public void update(Object object) {
     int baseHashCode = object == null ? 1 : ArrayUtil.hashCode(object);
 
+    // 判断依据累加
     count++;
     checksum += baseHashCode;
     baseHashCode *= count;
