@@ -27,6 +27,10 @@
 -->
 <configuration>
   <properties resource="jdbc.properties"/>
+  <!--可以不用配置-->
+  <settings>
+    <setting name="logImpl" value="LOG4J"/>
+  </settings>
   <typeAliases>
     <package name="cn.yangcx"/>
   </typeAliases>

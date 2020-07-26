@@ -212,6 +212,7 @@ public class Configuration {
 
   public void setLogImpl(Class<? extends Log> logImpl) {
     if (logImpl != null) {
+      // 配置了就认为存在自定义实现
       this.logImpl = logImpl;
       LogFactory.useCustomLogging(this.logImpl);
     }

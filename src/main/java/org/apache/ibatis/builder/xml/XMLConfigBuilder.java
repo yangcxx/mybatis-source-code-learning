@@ -164,6 +164,7 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   private void loadCustomLogImpl(Properties props) {
+    // MyBatis 预置部分支持的日志实现，或者可以自定义实现（实现org.apache.ibatis.logging.Log接口即可）
     Class<? extends Log> logImpl = resolveClass(props.getProperty("logImpl"));
     configuration.setLogImpl(logImpl);
   }
