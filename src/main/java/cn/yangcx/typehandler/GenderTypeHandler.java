@@ -1,10 +1,7 @@
 package cn.yangcx.typehandler;
 
 import cn.yangcx.GenderEnum;
-import org.apache.ibatis.type.BaseTypeHandler;
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.MappedJdbcTypes;
-import org.apache.ibatis.type.MappedTypes;
+import org.apache.ibatis.type.*;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -19,7 +16,12 @@ import java.sql.SQLException;
  */
 @MappedTypes(value = GenderEnum.class)
 @MappedJdbcTypes(value = {JdbcType.INTEGER})
-public class GenderTypeHandler extends BaseTypeHandler<GenderEnum> {
+public class GenderTypeHandler extends EnumTypeHandler<GenderEnum> {
+
+  public GenderTypeHandler(Class<GenderEnum> type) {
+    super(type);
+  }
+
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, GenderEnum parameter, JdbcType jdbcType) throws SQLException {
     ps.setInt(i, parameter.getCode());

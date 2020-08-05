@@ -1,5 +1,6 @@
 package cn.yangcx.entity;
 
+import cn.yangcx.GenderEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,13 +28,13 @@ public class Person implements Serializable {
 
   private Integer age;
 
-  private Integer sex;
+  private GenderEnum sex;
 
   private String address;
 
   private Long card;
 
-  public Person(Long id, String name, Integer sex) {
+  public Person(Long id, String name, GenderEnum sex) {
     this.id = id;
     this.name = name;
     this.sex = sex;

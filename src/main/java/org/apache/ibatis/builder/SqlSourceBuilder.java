@@ -139,6 +139,7 @@ public class SqlSourceBuilder extends BaseBuilder {
           throw new BuilderException("An invalid property '" + name + "' was found in mapping #{" + content + "}.  Valid properties are " + PARAMETER_PROPERTIES);
         }
       }
+      // 配置了 typeHandler 的话进行绑定
       if (typeHandlerAlias != null) {
         builder.typeHandler(resolveTypeHandler(javaType, typeHandlerAlias));
       }
@@ -148,7 +149,7 @@ public class SqlSourceBuilder extends BaseBuilder {
 
     private Map<String, String> parseParameterMapping(String content) {
       try {
-        // cxy 参数支持更复杂的形式？？？
+        // cxy 支持更复杂的参数形式：cn.yangcx.mapper.DemoMapper.findByIdAndGender
         return new ParameterExpression(content);
       } catch (BuilderException ex) {
         throw ex;

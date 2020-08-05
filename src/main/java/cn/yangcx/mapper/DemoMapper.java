@@ -15,6 +15,7 @@
  */
 package cn.yangcx.mapper;
 
+import cn.yangcx.GenderEnum;
 import cn.yangcx.entity.Person;
 import org.apache.ibatis.annotations.Param;
 
@@ -30,13 +31,25 @@ import java.util.Map;
 public interface DemoMapper {
 
   /**
+   * 枚举处理
+   *
+   * @param id
+   * @param gender
+   * @return
+   */
+  Person findByIdAndGender(@Param("id") Long id,
+                           @Param("gender") GenderEnum gender);
+
+  /**
    * 新增 fixme JDK11 的 bug，此处必须添加 @Param 注解
+   *
    * @param p 用户
    */
   void add(@Param("person") Person p);
 
   /**
    * #{} 占位符
+   *
    * @param map
    * @return
    */
@@ -44,6 +57,7 @@ public interface DemoMapper {
 
   /**
    * id精确查找
+   *
    * @param id id
    * @return person
    */
@@ -51,6 +65,7 @@ public interface DemoMapper {
 
   /**
    * ${} 占位符
+   *
    * @param name
    * @return
    */

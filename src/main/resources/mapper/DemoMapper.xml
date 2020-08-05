@@ -47,8 +47,11 @@
     from person
     where id = #{id}
   </select>
+    <select id="findByIdAndGender" resultType="cn.yangcx.entity.Person">
+      select * from person where id =#{param1} and sex = #{param2, typeHandler=cn.yangcx.typehandler.GenderTypeHandler}
+    </select>
 
-  <resultMap id="person" type="Person">
+    <resultMap id="person" type="Person">
     <constructor>
       <idArg name="id" javaType="java.lang.Long" column="id" jdbcType="BIGINT"/>
       <arg name="name" javaType="java.lang.String" column="name" jdbcType="VARCHAR"/>

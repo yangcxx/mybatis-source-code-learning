@@ -45,8 +45,8 @@ public class InitTest {
     //map.put("id", 1);
     //map.put("name", "yang");
     //System.out.println(mapper.selectAll(map));
-    Person person = mapper.findById(1L);
-    System.out.println(person);
+    //Person person = mapper.findById(1L);
+    //System.out.println(person);
     //Map<String, Object> yangcx = mapper.findWith$("yangcx");
     //System.out.println(yangcx);
     //Person p = new Person();
@@ -55,6 +55,8 @@ public class InitTest {
     //p.setCard(123456L);
     //p.setSex(1);
     //mapper.add(p);
+    Person person = mapper.findByIdAndGender(1L, GenderEnum.FEMALE);
+    System.out.println(person);
     sqlSession.close();
   }
 
