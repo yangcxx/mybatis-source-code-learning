@@ -15,7 +15,7 @@
  *
  * MyBatis 中的四大对象：
  * 1、Executor 决定 SQL 类型：select|update|delete|insert
- * 2、PreparedStatement 为 SQL 赋值
+ * 2、ParameterHandler 为 SQL 赋值
  * 3、StatementHandler 与数据库交互
  * 4、ResultHandler 结果处理器
  *
