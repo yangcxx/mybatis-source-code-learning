@@ -118,7 +118,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       // TODO 跟插件开发相关 MateObject 方便反射类操作实体类对象
       objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
       reflectorFactoryElement(root.evalNode("reflectorFactory"));
-      // settings 配置项预置
+      // settings 配置项预置（优先使用配置项，否则使用对应的默认值）
       settingsElement(settings);
       // read it after objectFactory and objectWrapperFactory issue #631
       environmentsElement(root.evalNode("environments"));
@@ -296,8 +296,9 @@ public class XMLConfigBuilder extends BaseBuilder {
       }
       // environment 支持多配置
       for (XNode child : context.getChildren()) {
+        // 可以多 environment 配置
         String id = child.getStringAttribute("id");
-        // 根据 default 选择启用的 environment
+        // 只能有一个匹配的 environment 被启用
         if (isSpecifiedEnvironment(id)) {
           // 事务管理器：同时支持别名和类全名加载
           TransactionFactory txFactory = transactionManagerElement(child.evalNode("transactionManager"));
@@ -327,7 +328,9 @@ public class XMLConfigBuilder extends BaseBuilder {
     Environment environment = configuration.getEnvironment();
     if (environment != null && databaseIdProvider != null) {
       // 根据databaseIdProvider 配置与 dataSource 配置设置唯一的的 dataBaseId
+      // 匹配规则：DataSource 的产品名等于DatabaseIdProvider 的 property name 属性，大小写严格区分
       String databaseId = databaseIdProvider.getDatabaseId(environment.getDataSource());
+      // 这里配置的是 DatabaseIdProvider 匹配的 property value
       configuration.setDatabaseId(databaseId);
     }
   }
