@@ -118,7 +118,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       // TODO 跟插件开发相关 MateObject 方便反射类操作实体类对象
       objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
       reflectorFactoryElement(root.evalNode("reflectorFactory"));
-      // settings 配置项预置
+      // settings 配置项预置（优先使用配置项，否则使用对应的默认值）
       settingsElement(settings);
       // read it after objectFactory and objectWrapperFactory issue #631
       environmentsElement(root.evalNode("environments"));
