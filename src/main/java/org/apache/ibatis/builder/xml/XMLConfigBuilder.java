@@ -296,8 +296,9 @@ public class XMLConfigBuilder extends BaseBuilder {
       }
       // environment 支持多配置
       for (XNode child : context.getChildren()) {
+        // 可以多 environment 配置
         String id = child.getStringAttribute("id");
-        // 根据 default 选择启用的 environment
+        // 只能有一个匹配的 environement 被启用
         if (isSpecifiedEnvironment(id)) {
           // 事务管理器：同时支持别名和类全名加载
           TransactionFactory txFactory = transactionManagerElement(child.evalNode("transactionManager"));
