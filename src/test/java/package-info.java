@@ -11,7 +11,7 @@
  *
  * 单体项目中一般很少用二级缓存，分布式项目中使用可能较多
  *
- * cxy MyBatis 与 Spring 集成后，由于对象的生命周期交由 Spring 管理，一级缓存使用也比较少
+ * cxy TODO MyBatis 与 Spring 集成后，由于对象的生命周期交由 Spring 管理，一级缓存使用也比较少
  *
  * MyBatis 中的四大对象：
  * 1、Executor 决定 SQL 类型：select|update|delete|insert
