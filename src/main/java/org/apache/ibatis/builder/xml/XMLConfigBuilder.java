@@ -328,7 +328,9 @@ public class XMLConfigBuilder extends BaseBuilder {
     Environment environment = configuration.getEnvironment();
     if (environment != null && databaseIdProvider != null) {
       // 根据databaseIdProvider 配置与 dataSource 配置设置唯一的的 dataBaseId
+      // 匹配规则：DataSource 的产品名等于DatabaseIdProvider 的 property name 属性，大小写严格区分
       String databaseId = databaseIdProvider.getDatabaseId(environment.getDataSource());
+      // 这里配置的是 DatabaseIdProvider 匹配的 property value
       configuration.setDatabaseId(databaseId);
     }
   }
