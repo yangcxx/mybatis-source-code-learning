@@ -401,6 +401,7 @@ public class XMLConfigBuilder extends BaseBuilder {
           if (resource != null && url == null && mapperClass == null) {
             ErrorContext.instance().resource(resource);
             InputStream inputStream = Resources.getResourceAsStream(resource);
+            // 每一个 Mapper.xml 都对应一个 XMLMapperBuilder 进行解析
             XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource,
               configuration.getSqlFragments());
             // 可以直接拿到 mapper.xml 文件输入流
@@ -408,6 +409,7 @@ public class XMLConfigBuilder extends BaseBuilder {
           } else if (resource == null && url != null && mapperClass == null) {
             ErrorContext.instance().resource(url);
             InputStream inputStream = Resources.getUrlAsStream(url);
+            // 每一个 Mapper.xml 都对应一个 XMLMapperBuilder 进行解析
             XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, url,
               configuration.getSqlFragments());
             // 可以直接拿到 mapper.xml 文件输入流
