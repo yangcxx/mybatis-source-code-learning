@@ -40,6 +40,7 @@ public class Person implements Serializable {
     this.sex = sex;
   }
 
+  // fixme 不知道为啥，不加注解，MyBatis无法获取真实的入参名称
   public Person(@Param(value = "id") Long id, @Param(value = "name") String name) {
     this.id = id;
     this.name = name;
