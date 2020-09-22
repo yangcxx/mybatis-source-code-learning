@@ -102,6 +102,7 @@ public class ResultMap {
         if (property != null) {
           resultMap.mappedProperties.add(property);
         }
+        // 暂存构造函数入参
         if (resultMapping.getFlags().contains(ResultFlag.CONSTRUCTOR)) {
           resultMap.constructorResultMappings.add(resultMapping);
           if (resultMapping.getProperty() != null) {
@@ -110,6 +111,7 @@ public class ResultMap {
         } else {
           resultMap.propertyResultMappings.add(resultMapping);
         }
+        // ID都是需要特殊处理的
         if (resultMapping.getFlags().contains(ResultFlag.ID)) {
           resultMap.idResultMappings.add(resultMapping);
         }
@@ -118,6 +120,7 @@ public class ResultMap {
         resultMap.idResultMappings.addAll(resultMap.resultMappings);
       }
       if (!constructorArgNames.isEmpty()) {
+        // 使用对应入参名称校验构造函数
         final List<String> actualArgNames = argNamesOfMatchingConstructor(constructorArgNames);
         if (actualArgNames == null) {
           throw new BuilderException("Error in result map '" + resultMap.id
