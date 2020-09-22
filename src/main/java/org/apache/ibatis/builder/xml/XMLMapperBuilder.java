@@ -274,7 +274,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     List<XNode> resultChildren = resultMapNode.getChildren();
     for (XNode resultChild : resultChildren) {
       if ("constructor".equals(resultChild.getName())) {
-        // cxy 构造方法必须也要添加注解？？？
+        // 获取到mapper.xml中配置的完整构造入参名称，同时标记出ID属性
         processConstructorElement(resultChild, typeClass, resultMappings);
       } else if ("discriminator".equals(resultChild.getName())) {
         discriminator = processDiscriminatorElement(resultChild, typeClass, resultMappings);
@@ -293,6 +293,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     ResultMapResolver resultMapResolver = new ResultMapResolver(builderAssistant, id, typeClass, extend,
       discriminator, resultMappings, autoMapping);
     try {
+      // 使用mapper.xml的配置校验真实的构造函数 fixme 构造函数必须使用 @Param 注解才能获取真实入参名称
       return resultMapResolver.resolve();
     } catch (IncompleteElementException e) {
       configuration.addIncompleteResultMap(resultMapResolver);
