@@ -149,6 +149,7 @@ public class ResultMap {
         Class<?>[] paramTypes = constructor.getParameterTypes();
         if (constructorArgNames.size() == paramTypes.length) {
           List<String> paramNames = getArgNames(constructor);
+          // 入参完全匹配
           if (constructorArgNames.containsAll(paramNames)
               && argTypesMatch(constructorArgNames, paramTypes, paramNames)) {
             return paramNames;
@@ -194,12 +195,14 @@ public class ResultMap {
         }
         if (name == null && resultMap.configuration.isUseActualParamName()) {
           if (actualParamNames == null) {
+            // 获取真实的入参名称
             actualParamNames = ParamNameUtil.getParamNames(constructor);
           }
           if (actualParamNames.size() > paramIndex) {
             name = actualParamNames.get(paramIndex);
           }
         }
+        // 未获取到入参，使用arg[index]代替
         paramNames.add(name != null ? name : "arg" + paramIndex);
       }
       return paramNames;
