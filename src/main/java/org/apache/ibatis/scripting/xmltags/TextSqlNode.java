@@ -54,6 +54,7 @@ public class TextSqlNode implements SqlNode {
   }
 
   private GenericTokenParser createParser(TokenHandler handler) {
+    // 直接使用 ${} 进行预判
     return new GenericTokenParser("${", "}", handler);
   }
 
