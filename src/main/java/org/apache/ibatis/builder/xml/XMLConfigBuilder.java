@@ -326,6 +326,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       String type = context.getStringAttribute("type");
       // awful patch to keep backward compatibility
       if ("VENDOR".equals(type)) {
+        // DB_VENDOR对应org.apache.ibatis.mapping.VendorDatabaseIdProvider
         type = "DB_VENDOR";
       }
       Properties properties = context.getChildrenAsProperties();
