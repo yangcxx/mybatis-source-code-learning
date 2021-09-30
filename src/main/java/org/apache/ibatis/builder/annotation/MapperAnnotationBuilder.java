@@ -61,6 +61,7 @@ public class MapperAnnotationBuilder {
       .collect(Collectors.toSet());
 
   private final Configuration configuration;
+  // 每一个MapperAnnotationBuilder都会绑定一个新的assistant
   private final MapperBuilderAssistant assistant;
   private final Class<?> type;
 
