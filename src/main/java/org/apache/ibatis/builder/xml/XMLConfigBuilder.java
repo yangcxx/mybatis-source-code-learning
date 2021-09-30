@@ -202,6 +202,7 @@ public class XMLConfigBuilder extends BaseBuilder {
         Properties properties = child.getChildrenAsProperties();
         // 自定义插件必需实现Interceptor接口
         Interceptor interceptorInstance = (Interceptor) resolveClass(interceptor).getDeclaredConstructor().newInstance();
+        // 支持从配置文件传参
         interceptorInstance.setProperties(properties);
         configuration.addInterceptor(interceptorInstance);
       }
