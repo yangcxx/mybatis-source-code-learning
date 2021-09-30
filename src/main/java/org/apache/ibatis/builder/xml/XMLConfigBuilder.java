@@ -200,8 +200,8 @@ public class XMLConfigBuilder extends BaseBuilder {
       for (XNode child : parent.getChildren()) {
         String interceptor = child.getStringAttribute("interceptor");
         Properties properties = child.getChildrenAsProperties();
-        Interceptor interceptorInstance =
-          (Interceptor) resolveClass(interceptor).getDeclaredConstructor().newInstance();
+        // 自定义插件必需实现Interceptor接口
+        Interceptor interceptorInstance = (Interceptor) resolveClass(interceptor).getDeclaredConstructor().newInstance();
         interceptorInstance.setProperties(properties);
         configuration.addInterceptor(interceptorInstance);
       }
