@@ -105,7 +105,9 @@ public class XMLConfigBuilder extends BaseBuilder {
       // issue #117 read properties first
       propertiesElement(root.evalNode("properties"));
       Properties settings = settingsAsProperties(root.evalNode("settings"));
-      // 支持配置VFS具体实现，可以配置多个
+      // 支持配置VFS具体实现，可以配置多个（英文逗号分隔，Configuration中只保存最后一个有效配置，VFS类保存所有有效配置项）
+      // VFS含义是虚拟文件系统；主要是通过程序能够方便读取本地文件系统、FTP文件系统等系统中的文件资源
+      // 纯粹的MyBatis项目与Spring Boot集成时需要配置SpringBoot提供的VFS实现
       loadCustomVfs(settings);
       // 支持配置日志实现
       loadCustomLogImpl(settings);
