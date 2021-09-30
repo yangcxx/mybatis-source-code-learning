@@ -143,6 +143,7 @@ public class TypeAliasRegistry {
     if (aliasAnnotation != null) {
       alias = aliasAnnotation.value();
     }
+    // 别名：简单类名或注解Alias配置（注解配置优先级更高）
     registerAlias(alias, type);
   }
 
