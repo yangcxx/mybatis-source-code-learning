@@ -234,13 +234,16 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   private void propertiesElement(XNode context) throws Exception {
     if (context != null) {
+      // 默认直接解析properties标签下的子标签
       Properties defaults = context.getChildrenAsProperties();
       String resource = context.getStringAttribute("resource");
       String url = context.getStringAttribute("url");
+      // resource和url配置只能二选一
       if (resource != null && url != null) {
         throw new BuilderException("The properties element cannot specify both a URL and a resource based property " +
           "file reference.  Please specify one or the other.");
       }
+      // 解析文件内容并配置给Configuration、XPathParser
       if (resource != null) {
         defaults.putAll(Resources.getResourceAsProperties(resource));
       } else if (url != null) {
@@ -251,6 +254,7 @@ public class XMLConfigBuilder extends BaseBuilder {
         defaults.putAll(vars);
       }
       parser.setVariables(defaults);
+      // 同时配置了 xml 与外部 properties 文件，外部 properties 优先级更高（此处只是解析存储，未确认优先级）
       configuration.setVariables(defaults);
     }
   }
