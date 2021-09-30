@@ -46,6 +46,10 @@
     <package name="cn.yangcx.typehandler"/>
     <!--<typeHandler handler="" javaType="" jdbcType=""/>-->
   </typeHandlers>
+  <!--插件 TODO 配置在 typeHandlers 前面会报错-->
+  <!--<plugins>
+    <plugin interceptor="cn.yangcx.plugin.MyPagePlugin"/>
+  </plugins>-->
   <!--通过default决定启用哪一个environment-->
   <environments default="development">
     <environment id="development">
