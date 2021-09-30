@@ -431,6 +431,8 @@ public final class TypeHandlerRegistry {
   public <T> TypeHandler<T> getInstance(Class<?> javaTypeClass, Class<?> typeHandlerClass) {
     if (javaTypeClass != null) {
       try {
+        // 使用typeHandlerClass类含javaTypeClass的构造函数构建新对象
+        // 此处为GenderTypeHandler(Class<GenderEnum> type)
         Constructor<?> c = typeHandlerClass.getConstructor(Class.class);
         return (TypeHandler<T>) c.newInstance(javaTypeClass);
       } catch (NoSuchMethodException ignored) {
