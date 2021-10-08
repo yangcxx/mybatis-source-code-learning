@@ -244,6 +244,7 @@ public class XMLMapperBuilder extends BaseBuilder {
           javaTypeClass, jdbcTypeEnum, resultMap, modeEnum, typeHandlerClass, numericScale);
         parameterMappings.add(parameterMapping);
       }
+      // 缓存ParameterMap：parameterMap.id，parameterMap.type对应Class，parameterMap.parameter配置集合
       builderAssistant.addParameterMap(id, parameterClass, parameterMappings);
     }
   }
