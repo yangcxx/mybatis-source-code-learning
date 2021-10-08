@@ -85,6 +85,7 @@ public class SqlSourceBuilder extends BaseBuilder {
 
     @Override
     public String handleToken(String content) {
+      // 占位符替换结果直接返回?，实际的内容处理为ParameterMapping（可能涉及到typeHandler等进一步处理）
       parameterMappings.add(buildParameterMapping(content));
       return "?";
     }
