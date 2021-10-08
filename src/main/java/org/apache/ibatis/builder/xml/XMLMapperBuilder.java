@@ -381,8 +381,8 @@ public class XMLMapperBuilder extends BaseBuilder {
    * @return 校验结果
    */
   private boolean databaseIdMatchesCurrent(String id, String databaseId, String requiredDatabaseId) {
+    // databaseId配置启用直接equals判断
     if (requiredDatabaseId != null) {
-      // 优先匹配 config.xml 中启用的 databaseId
       return requiredDatabaseId.equals(databaseId);
     }
     // config.xml 中未启用 databaseId 全部忽略
@@ -396,7 +396,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       return true;
     }
     // skip this fragment if there is a previous one with a not null databaseId
-    // 出现重复丢弃后来的SQL代码段
+    // 出现重复保留一份配置了databaseId的SQL段
     XNode context = this.sqlFragments.get(id);
     return context.getStringAttribute("databaseId") == null;
   }
