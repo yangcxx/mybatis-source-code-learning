@@ -98,8 +98,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     }
 
     // 解析SQL：根据SQL文本判断是否需要动态解析
-    // #{} 预编译为 ?
-    // ${} 不做任何处理
+    // 启动阶段：#{}不含if等内嵌代码段的简单SQL直接预编译为?，含有的的不处理；${}不做任何处理
     SqlSource sqlSource = langDriver.createSqlSource(configuration, context, parameterTypeClass);
     // 默认都是 PREPARED Statement
     StatementType statementType = StatementType.valueOf(context.getStringAttribute("statementType", StatementType.PREPARED.toString()));
