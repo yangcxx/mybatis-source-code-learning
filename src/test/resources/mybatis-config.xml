@@ -67,7 +67,7 @@
     </environment>
   </environments>
   <!-- 
-       fixme 多数据库支持：具体的mapper.xml中也需要具体配置
+       fixme 多数据库支持：具体的mapper.xml中也需要具体配置。对应sql|select|insert|update|delete段中没有配置或配置满足条件的都会被启用
        name是数据库产品名，value为配置给Configuration对象的databaseId属性值
   -->
   <!--<databaseIdProvider type="DB_VENDOR">-->
