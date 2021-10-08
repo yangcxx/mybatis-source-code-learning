@@ -65,11 +65,17 @@ public class XMLScriptBuilder extends BaseBuilder {
   }
 
   public SqlSource parseScriptNode() {
-    // 判断SQL是动态的还是静态的
+    /*
+     * 判断SQL是动态的还是静态的
+     * 是否为动态SQL：动态或静态并不只是说含有${}或#{}，是否含有if等条件语句也是判断依据之一（或者说除${}和#{}的规定外，还需要考虑SQL执行时是否需要动态拼接）
+     *  1、含有#{}的简单SQL是静态的（简单：不含if等条件语句）
+     *  2、含有${}的任意SQL都是动态的
+     *  3、同时含有#{}和if等条件语句的SQL启动阶段也属于是动态的
+     */
     MixedSqlNode rootSqlNode = parseDynamicTags(context);
     SqlSource sqlSource;
     if (isDynamic) {
-      // 动态：${}，不做任何处理
+      // 动态：不做任何处理
       sqlSource = new DynamicSqlSource(configuration, rootSqlNode);
     } else {
       // 静态：预编译将 #{} 替换为 ?
@@ -93,7 +99,7 @@ public class XMLScriptBuilder extends BaseBuilder {
         // Node 里面是纯文本
         String data = child.getStringBody("");
         TextSqlNode textSqlNode = new TextSqlNode(data);
-        // ${} 占位符就是动态的
+        // 含有${}占位符或if等条件语句就是动态的
         if (textSqlNode.isDynamic()) {
           contents.add(textSqlNode);
           isDynamic = true;
