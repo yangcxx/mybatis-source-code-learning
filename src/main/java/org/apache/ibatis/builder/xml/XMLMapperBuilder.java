@@ -83,6 +83,9 @@ public class XMLMapperBuilder extends BaseBuilder {
       configurationElement(parser.evalNode("/mapper"));
       configuration.addLoadedResource(resource);
       // 解析并绑定 namespace cxy 目前不知道有什么用，注释上说是与Spring集成有关系
+      // 解析并绑定 namespace
+      // org.apache.ibatis.builder.annotation.MapperAnnotationBuilder.loadXmlResource
+      // Spring可能不知道资源的真正名称，此操作是防止资源二次加载 todo 用来解决与Spring集成无法扫描到*Mapper.java的问题
       bindMapperForNamespace();
     }
 
@@ -191,8 +194,10 @@ public class XMLMapperBuilder extends BaseBuilder {
       CacheRefResolver cacheRefResolver = new CacheRefResolver(builderAssistant, context.getStringAttribute(
         "namespace"));
       try {
+        // 验证缓存配置，验证成功则为当前namespace配置使用缓存
         cacheRefResolver.resolveCacheRef();
       } catch (IncompleteElementException e) {
+        // 没找到缓存配置先暂存后面继续处理
         configuration.addIncompleteCacheRef(cacheRefResolver);
       }
     }
@@ -460,7 +465,7 @@ public class XMLMapperBuilder extends BaseBuilder {
         // Spring may not know the real resource name so we set a flag
         // to prevent loading again this resource from the mapper interface
         // look at MapperAnnotationBuilder#loadXmlResource
-        // cxy Spring 扫描不到 Mapper.java ??
+        // Spring 可能扫描不到MyBatis特有的 *Mapper.java
         configuration.addLoadedResource("namespace:" + namespace);
         configuration.addMapper(boundType);
       }
