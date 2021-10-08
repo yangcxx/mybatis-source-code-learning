@@ -120,6 +120,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .properties(props)
         // 根据 cache 属性进行包装（存在必须的标的包装）
         .build();
+    // 将当前namespace的缓存配置存储到Configuration对象
     configuration.addCache(cache);
     currentCache = cache;
     return cache;
