@@ -365,7 +365,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       String databaseId = context.getStringAttribute("databaseId");
       String id = context.getStringAttribute("id");
       id = builderAssistant.applyCurrentNamespace(id, false);
-      // 多数据源匹配校验（出现重复时丢弃后来的SQL代码段）
+      // 多数据源匹配校验（出现重复只保留一份配置了databaseId的SQL段）
       if (databaseIdMatchesCurrent(id, databaseId, requiredDatabaseId)) {
         sqlFragments.put(id, context);
       }
@@ -396,7 +396,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       return true;
     }
     // skip this fragment if there is a previous one with a not null databaseId
-    // 出现重复保留一份配置了databaseId的SQL段
+    // 出现重复只保留一份配置了databaseId的SQL段
     XNode context = this.sqlFragments.get(id);
     return context.getStringAttribute("databaseId") == null;
   }
