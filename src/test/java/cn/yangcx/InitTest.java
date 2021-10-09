@@ -39,7 +39,7 @@ public class InitTest {
     SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
     // 默认情况下启用缓存
     SqlSession sqlSession = sqlSessionFactory.openSession();
-    // 通过动态代理执行真正的业务代码
+    // 通过JDK动态代理返回代理类执行真正的业务代码
     DemoMapper mapper = sqlSession.getMapper(DemoMapper.class);
     //Map<String, Object> map = new HashMap<>(2);
     //map.put("id", 1);
