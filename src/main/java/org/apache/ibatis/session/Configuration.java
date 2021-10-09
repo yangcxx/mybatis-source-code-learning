@@ -649,11 +649,12 @@ public class Configuration {
     } else {
       executor = new SimpleExecutor(this, transaction);
     }
-    // 默认开启缓存
+    // 如果开启了二级缓存，则装饰原先的Executor
     if (cacheEnabled) {
+      // 装饰器模式
       executor = new CachingExecutor(executor);
     }
-    // cxy 插件
+    // 判断是否需要通过插件对Executor进行拦截（需要拦截此处返回一个代理类）
     executor = (Executor) interceptorChain.pluginAll(executor);
     return executor;
   }
