@@ -309,6 +309,8 @@ public class MapperMethod {
     }
 
     public Object convertArgsToSqlCommandParam(Object[] args) {
+      // 参数key:value映射：除从方法签名中获取的参数名称，还会额外保存一份param-index:value的映射
+      // e.g. gender:FEMALE,id:1;param1:1,param2:FEMALE（相同的值映射会保存两份）
       return paramNameResolver.getNamedParams(args);
     }
 
