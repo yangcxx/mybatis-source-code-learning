@@ -83,6 +83,8 @@ public class MapperMethod {
         } else if (method.returnsCursor()) {
           result = executeForCursor(sqlSession, args);
         } else {
+          // 参数key:value映射：除从方法签名中获取的参数名称，还会额外保存一份param-index:value的映射
+          // e.g. gender:FEMALE,id:1;param1:1,param2:FEMALE（相同的值映射会保存两份）
           Object param = method.convertArgsToSqlCommandParam(args);
           result = sqlSession.selectOne(command.getName(), param);
           if (method.returnsOptional()
