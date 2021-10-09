@@ -58,6 +58,7 @@ public class SimpleExecutor extends BaseExecutor {
     Statement stmt = null;
     try {
       Configuration configuration = ms.getConfiguration();
+      // 决定使用何种处理器（SimpleStatementHandler、PreparedStatementHandler、CallableStatementHandler）
       StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);
       // 获取PreparedStatement、执行超时设置、结果记录大小设置及SQL参数赋值
       stmt = prepareStatement(handler, ms.getStatementLog());
