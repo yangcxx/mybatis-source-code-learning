@@ -41,9 +41,11 @@ public class Plugin implements InvocationHandler {
   }
 
   public static Object wrap(Object target, Interceptor interceptor) {
+    // 解析获取Interceptor类通过注解@Intercepts定义的方法签名
     Map<Class<?>, Set<Method>> signatureMap = getSignatureMap(interceptor);
     Class<?> type = target.getClass();
     Class<?>[] interfaces = getAllInterfaces(type, signatureMap);
+    // 如果需要拦截的方法在Executor接口中存在则返回对应代理类
     if (interfaces.length > 0) {
       return Proxy.newProxyInstance(
           type.getClassLoader(),
