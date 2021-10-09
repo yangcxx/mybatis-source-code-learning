@@ -628,7 +628,7 @@ public class Configuration {
     // 决定SimpleStatementHandler、PreparedStatementHandler、CallableStatementHandler（存储过程）
     StatementHandler statementHandler = new RoutingStatementHandler(executor, mappedStatement, parameterObject,
       rowBounds, resultHandler, boundSql);
-    // cxy 插件？？
+    // 判断是否需要通过插件对StatementHandler进行拦截（需要拦截此处返回一个代理类）
     statementHandler = (StatementHandler) interceptorChain.pluginAll(statementHandler);
     return statementHandler;
   }
