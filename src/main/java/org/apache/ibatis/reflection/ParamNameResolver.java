@@ -131,12 +131,14 @@ public class ParamNameResolver {
       final Map<String, Object> param = new ParamMap<>();
       int i = 0;
       for (Map.Entry<Integer, String> entry : names.entrySet()) {
+        // 保存标准的键值映射
         param.put(entry.getValue(), args[entry.getKey()]);
         // add generic param names (param1, param2, ...)
         // 参数都会被转换成 param1 param2 这种格式
         final String genericParamName = GENERIC_NAME_PREFIX + (i + 1);
         // ensure not to overwrite parameter named with @Param
         if (!names.containsValue(genericParamName)) {
+          // 防止@Param配置名称覆盖，另保存一份param-index:value映射
           param.put(genericParamName, args[entry.getKey()]);
         }
         i++;
